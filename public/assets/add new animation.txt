@@ -1,0 +1,16 @@
+import new animation to blender
+open dope sheet in a different screen
+select action editor
+
+select target skeleton
+shift + select the source skeelton
+ctrl+l
+link animation Data
+
+it is easier!!
+just import the skeleton with the animation
+select the original skeleton
+open dope sheet in a different screen
+select action editor
+push down the new animation to the original mesh
+done
