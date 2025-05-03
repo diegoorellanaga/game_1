@@ -27,6 +27,8 @@ export default class CharacterController {
         this.ui = ui
         this.landingOnce = false
 
+       
+
         this.isFollowCameraActivated = true
       //  this.ORIGINAL_TILT = new BABYLON.Vector3(0.3, 0, 0);
         this.pickedFloorPoint = null
@@ -52,9 +54,10 @@ export default class CharacterController {
 
         this.ORIGINAL_TILT = new BABYLON.Vector3(0.3, 0, 0);
 
-        this.cameraHighOffset = 10
-        this.cameraXoffset = 1
-        this.cameraZoffset = 1
+        this.cameraOffsetRadious = 12; //12
+        this.cameraHighOffset = 10 //10
+        this.cameraXoffset = 1 //1
+        this.cameraZoffset = 1 //1
         this.init();
 
         this.dialogsStates = {cigGuy:false}
@@ -192,12 +195,12 @@ export default class CharacterController {
 
             if(this.scene.activeCamera.name != "FixedCam"){
                 this.setupCameraFixedZ()
-                this.camera.position = new BABYLON.Vector3(this.character.tempCylinder.position.x+this.cameraXoffset, this.character.tempCylinder.position.y + this.cameraHighOffset, this.character.tempCylinder.position.z+12);
+                this.camera.position = new BABYLON.Vector3(this.character.tempCylinder.position.x+this.cameraXoffset, this.character.tempCylinder.position.y + this.cameraHighOffset, this.character.tempCylinder.position.z+this.cameraOffsetRadious);
             }
 
                      //   this.camera.position = new BABYLON.Vector3(this.character.tempCylinder.position.x, this.character.tempCylinder.position.y+15, this.camera.position.z);
             // Define the target position for the camera
-            var targetPosition = new BABYLON.Vector3(this.character.tempCylinder.position.x +this.cameraXoffset, this.character.tempCylinder.position.y + this.cameraHighOffset, this.character.tempCylinder.position.z+12)//this.camera.position.z);
+            var targetPosition = new BABYLON.Vector3(this.character.tempCylinder.position.x +this.cameraXoffset, this.character.tempCylinder.position.y + this.cameraHighOffset, this.character.tempCylinder.position.z+this.cameraOffsetRadious)//this.camera.position.z);
             
             // Set a lerp factor to control the speed of the transition (0 for instant, 1 for no movement)
             var lerpFactor = 0.06; // Adjust this value to control the smoothness of the transition
@@ -213,12 +216,12 @@ export default class CharacterController {
             if(this.scene.activeCamera.name != "FixedCamX"){
                 this.setupCameraFixedX()
 
-                this.camera.position = new BABYLON.Vector3(this.character.tempCylinder.position.x+12,this.character.tempCylinder.position.y + this.cameraHighOffset,this.character.tempCylinder.position.z+this.cameraZoffset );
+                this.camera.position = new BABYLON.Vector3(this.character.tempCylinder.position.x+this.cameraOffsetRadious,this.character.tempCylinder.position.y + this.cameraHighOffset,this.character.tempCylinder.position.z+this.cameraZoffset );
             }
 
                      //   this.camera.position = new BABYLON.Vector3(this.character.tempCylinder.position.x, this.character.tempCylinder.position.y+15, this.camera.position.z);
             // Define the target position for the camera
-            var targetPosition = new BABYLON.Vector3(this.character.tempCylinder.position.x+12, this.character.tempCylinder.position.y + this.cameraHighOffset,this.character.tempCylinder.position.z+this.cameraZoffset );  //this.camera.position.z
+            var targetPosition = new BABYLON.Vector3(this.character.tempCylinder.position.x+this.cameraOffsetRadious, this.character.tempCylinder.position.y + this.cameraHighOffset,this.character.tempCylinder.position.z+this.cameraZoffset );  //this.camera.position.z
             
             // Set a lerp factor to control the speed of the transition (0 for instant, 1 for no movement)
             var lerpFactor = 0.06; // Adjust this value to control the smoothness of the transition
@@ -233,12 +236,12 @@ export default class CharacterController {
 
             if(this.scene.activeCamera.name != "FixedCamZN"){
                 this.setupCameraFixedZN()
-                this.camera.position = new BABYLON.Vector3(this.character.tempCylinder.position.x+this.cameraXoffset, this.character.tempCylinder.position.y + this.cameraHighOffset, this.character.tempCylinder.position.z-12);
+                this.camera.position = new BABYLON.Vector3(this.character.tempCylinder.position.x+this.cameraXoffset, this.character.tempCylinder.position.y + this.cameraHighOffset, this.character.tempCylinder.position.z-this.cameraOffsetRadious);
             }
 
                      //   this.camera.position = new BABYLON.Vector3(this.character.tempCylinder.position.x, this.character.tempCylinder.position.y+15, this.camera.position.z);
             // Define the target position for the camera
-            var targetPosition = new BABYLON.Vector3(this.character.tempCylinder.position.x +this.cameraXoffset, this.character.tempCylinder.position.y + this.cameraHighOffset, this.character.tempCylinder.position.z-12)//this.camera.position.z);
+            var targetPosition = new BABYLON.Vector3(this.character.tempCylinder.position.x +this.cameraXoffset, this.character.tempCylinder.position.y + this.cameraHighOffset, this.character.tempCylinder.position.z-this.cameraOffsetRadious)//this.camera.position.z);
             
             // Set a lerp factor to control the speed of the transition (0 for instant, 1 for no movement)
             var lerpFactor = 0.06; // Adjust this value to control the smoothness of the transition
@@ -256,12 +259,12 @@ export default class CharacterController {
             if(this.scene.activeCamera.name != "FixedCamXN"){
                 this.setupCameraFixedXN()
 
-                this.camera.position = new BABYLON.Vector3(this.character.tempCylinder.position.x-12,this.character.tempCylinder.position.y + this.cameraHighOffset,this.character.tempCylinder.position.z+this.cameraZoffset );
+                this.camera.position = new BABYLON.Vector3(this.character.tempCylinder.position.x-this.cameraOffsetRadious,this.character.tempCylinder.position.y + this.cameraHighOffset,this.character.tempCylinder.position.z+this.cameraZoffset );
             }
 
                      //   this.camera.position = new BABYLON.Vector3(this.character.tempCylinder.position.x, this.character.tempCylinder.position.y+15, this.camera.position.z);
             // Define the target position for the camera
-            var targetPosition = new BABYLON.Vector3(this.character.tempCylinder.position.x-12, this.character.tempCylinder.position.y + this.cameraHighOffset,this.character.tempCylinder.position.z+this.cameraZoffset );  //this.camera.position.z
+            var targetPosition = new BABYLON.Vector3(this.character.tempCylinder.position.x-this.cameraOffsetRadious, this.character.tempCylinder.position.y + this.cameraHighOffset,this.character.tempCylinder.position.z+this.cameraZoffset );  //this.camera.position.z
             
             // Set a lerp factor to control the speed of the transition (0 for instant, 1 for no movement)
             var lerpFactor = 0.06; // Adjust this value to control the smoothness of the transition
@@ -765,7 +768,7 @@ this.camera.attachControl(canvas, true);
         let raycastStartPosition2 = this.character.mesh.position.clone();
     
         // Define an offset to adjust the location of the beginning of the second ray (debugging)
-        let offset2 = new BABYLON.Vector3(0, 3.8-reducer, 0); // Adjust the offset as needed
+        let offset2 = new BABYLON.Vector3(0, 3.2-reducer, 0); // Adjust the offset as needed
     
         // Apply the offset to the second raycast start position
         raycastStartPosition2.addInPlace(offset2);
@@ -797,62 +800,80 @@ this.camera.attachControl(canvas, true);
 
         ///////////////////////////////////////////////////////////
         // Define the start position of the second raycast from the center of the character mesh
-        let raycastStartPosition3 = this.character.mesh.position.clone();
+      //  let raycastStartPosition3 = this.character.mesh.position.clone();
     
         // Define an offset to adjust the location of the beginning of the second ray (debugging)
-        let offset3 = new BABYLON.Vector3(0, 3.6-reducer, 0); // Adjust the offset as needed
+      //  let offset3 = new BABYLON.Vector3(0, 3.6-reducer, 0); // Adjust the offset as needed
     
         // Apply the offset to the second raycast start position
-        raycastStartPosition3.addInPlace(offset3);
+     //   raycastStartPosition3.addInPlace(offset3);
     
         // Define the direction of the second raycast (forward from the character)
-        let rayDirection3 = this.character.mesh.forward.clone();
+     //   let rayDirection3 = this.character.mesh.forward.clone();
     
         // Create the second ray
-        let ray3 = new BABYLON.Ray(raycastStartPosition3, rayDirection3, rayLength);
+      //  let ray3 = new BABYLON.Ray(raycastStartPosition3, rayDirection3, rayLength);
     
         // Perform the second raycasting
-        let pick3 = this.scene.pickWithRay(ray3, predicate);
+    //    let pick3 = this.scene.pickWithRay(ray3, predicate);
     
         // Calculate the end position of the second raycast
-        let endPosition3 = raycastStartPosition3.add(rayDirection3.negate().scale(rayLength));
+     //   let endPosition3 = raycastStartPosition3.add(rayDirection3.negate().scale(rayLength));
     
         // Debugging: Create or update the debug line for the second ray
-        if (!this.frontRayLine3) {
-            // Create the line if it doesn't exist
-            this.frontRayLine3 = BABYLON.Mesh.CreateLines("frontRayLine3", [raycastStartPosition3.subtract(this.character.mesh.position.scale(0.7)), endPosition3.subtract(this.character.mesh.position.scale(0.7))], this.scene);
-            // Set the character mesh as the parent of the line mesh
-            this.frontRayLine3.checkCollisions = false;
-            this.frontRayLine3.isPickable = false;
-            this.frontRayLine3.parent = this.character.mesh;
-        } else {
-            // Update the existing line
-            BABYLON.Mesh.CreateLines(null, [raycastStartPosition3.subtract(this.character.mesh.position.scale(0.7)), endPosition3.subtract(this.character.mesh.position.scale(0.7))], null, null, this.frontRayLine3);
-        }
+        // if (!this.frontRayLine3) {
+        //     // Create the line if it doesn't exist
+        //     this.frontRayLine3 = BABYLON.Mesh.CreateLines("frontRayLine3", [raycastStartPosition3.subtract(this.character.mesh.position.scale(0.7)), endPosition3.subtract(this.character.mesh.position.scale(0.7))], this.scene);
+        //     // Set the character mesh as the parent of the line mesh
+        //     this.frontRayLine3.checkCollisions = false;
+        //     this.frontRayLine3.isPickable = false;
+        //     this.frontRayLine3.parent = this.character.mesh;
+        // } else {
+        //     // Update the existing line
+        //     BABYLON.Mesh.CreateLines(null, [raycastStartPosition3.subtract(this.character.mesh.position.scale(0.7)), endPosition3.subtract(this.character.mesh.position.scale(0.7))], null, null, this.frontRayLine3);
+        // }
         //////////////////////////////////////////////////////////////
 
     let isHang = false
 
-    if(pick3.hit && pick3.pickedMesh.id.includes("boss")){
+    // if(pick3.hit && pick3.pickedMesh.id.includes("boss")){
 
-        if(!this.dialogsStates.cigGuy){
-            this.dialogsStates.cigGuy = true
-        this.ui.cigarGuyDialog(pick3.pickedMesh,this.engine,this.scene,this.scene.activeCamera,this.dialogsStates) //meshCig,engine,scene,camera
-        }
-    }
+    //     if(!this.dialogsStates.cigGuy){
+    //         this.dialogsStates.cigGuy = true
+    //     this.ui.cigarGuyDialog(pick3.pickedMesh,this.engine,this.scene,this.scene.activeCamera,this.dialogsStates) //meshCig,engine,scene,camera
+    //     }
+    // }
 
-    if(!pick1.hit && (pick2.hit || pick3.hit) && !this.character.characterState['isClimbing']){
-        pick2 = pick2.hit ? pick2 : pick3
+    if(!pick1.hit && (pick2.hit ) && !this.character.characterState['isClimbing']){
+     //   pick2 = pick2.hit ? pick2 : pick3
         console.log("edge2")
         let surfaceNormal = pick2.getNormal();
+
+        let contactPoint = pick2.pickedPoint.clone();
+
+
+    // 1. Get the cube's top Y position (assuming it's a cube)
+    let cubeMesh = pick2.pickedMesh;
+    let cubeTopY = cubeMesh.getBoundingInfo().boundingBox.maximumWorld.y;
+    
+    // 2. Create edge point using:
+    // - X/Z from contact point
+    // - Y from cube top
+    let edgePoint = new BABYLON.Vector3(
+        contactPoint.x,
+        cubeTopY,  // This is the exact top edge of the cube
+        contactPoint.z
+    );
+
+
         // Calculate the angle between the ray direction and the surface normal
         let angleInRadians = Math.acos(rayDirection2.negate().dot(surfaceNormal));
         let angleInDegrees = BABYLON.Tools.ToDegrees(angleInRadians);
         console.log("edge degrees",angleInDegrees,pick2.pickedMesh)  //.includes("platform")
         if(angleInDegrees<30 || Math.abs(angleInDegrees-180)<30 || (pick2.pickedMesh.id.includes("platform")  && Math.abs(angleInDegrees-90)<30)){
            // console.log("hang!!")
-            isHang=true
-            this.character.characterState['isClimbing'] = true
+           // isHang=true
+          //  this.character.characterState['isClimbing'] = true
             this.character.characterState['isJumping'] = false
             this.character.characterState['isRunning'] = false
             this.character.characterState['isRunningBack'] = false
@@ -861,12 +882,30 @@ this.camera.attachControl(canvas, true);
             this.character.characterState['isFalling'] = false
             this.character.characterState['isLanding'] = false
 
-            this.character.mesh.position.addInPlace(this.character.mesh.forward.clone().scale(0.2));
+            // this.character.initialCharacterPositionClimbing = this.character.mesh.position.clone()
+            // console.log("BEFORE CLIMB: ",this.character.mesh.position.clone())
+            // this.character.climbingEdgePoint = edgePoint
+            // this.character.mesh.position.addInPlace(surfaceNormal.clone().scale(0.2));
+            // this.currentMovingPlatform = pick2.pickedMesh
+            // this.character.climbingSurfaceNormal = surfaceNormal.clone()
 
-            this.character.initialCharacterPositionClimbing = this.character.mesh.position.clone()
-            console.log("BEFORE CLIMB: ",this.character.mesh.position.clone())
-            this.currentMovingPlatform = pick2.pickedMesh
+        // Store the critical edge reference points (with height adjustment)
+        this.character.climbingEdgePoint = edgePoint.add(surfaceNormal.scale(-0.5));
+        this.character.climbingSurfaceNormal = surfaceNormal.clone();
+        this.currentMovingPlatform = pick2.pickedMesh;
+        
+        // Position character relative to edge point (subtract 2.4 from Y)
+        const characterPosition = this.character.climbingEdgePoint.clone();
+        characterPosition.y -= this.character.highOffset_2; // Adjust for character height
+        this.character.mesh.position.copyFrom(characterPosition);
 
+        // SIMPLE ROTATION ALIGNMENT - JUST DO THIS:
+        this.character.mesh.lookAt(
+            this.character.mesh.position.add(surfaceNormal)
+        );
+
+        isHang=true
+        this.character.characterState['isClimbing'] = true
 
         }
     }

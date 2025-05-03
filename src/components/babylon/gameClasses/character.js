@@ -6,10 +6,18 @@ import "@babylonjs/core/Materials/standardMaterial";
 import "@babylonjs/core/Materials/Textures/Loaders/envTextureLoader";
 
 export default class Character {
-    constructor(scene, assetsManager,serverLocation,speedScale) {
+    constructor(scene, assetsManager,serverLocation,speedScale, inputManager) {
         this.scene = scene;
         this.assetsManager = assetsManager;
         this.serverLocation = serverLocation
+
+        this.inputManager = inputManager
+
+        this.highOffset = 2.355
+        this.highOffset_2 = 2.4
+
+        this.climbingSurfaceNormal = null;
+        this.climbingEdgePoint = null;
 
         this.mesh = null; // The 3D mesh representing the character
         this.meshData = null;
@@ -452,16 +460,21 @@ this.mesh.rotate(BABYLON.Axis.Y, angle, BABYLON.Space.WORLD);
         this.previousAnimation = 'climb';
         const climbAnimation = this.animations['bracedhangtocrouch'];
     
+      //  this.highOffset = 2.33
         if (activate) {
             this.effortClimb.play()
-            //for camera purposes
+            
+            //for camera purposes FOR CAMERA!!
             this.charIsClimbing = true
             this.initialClimbPosition = this.mesh.position.clone()
-            let totalDistance = this.mesh.forward.clone().scale(0.6); // Start with the first vector
-            totalDistance.addInPlace(new BABYLON.Vector3(0, 2.4, 0)); // Add the second vector
-            totalDistance.addInPlace(this.mesh.forward.clone().scale(0.42)); // Add the third vector
+          //  let totalDistance = this.mesh.forward.clone().scale(0.6); // Start with the first vector
+            let totalDistance = this.climbingSurfaceNormal.clone().scale(0.6); // Start with the first vector
+            totalDistance.addInPlace(new BABYLON.Vector3(0,  this.highOffset, 0)); // Add the second vector
+          //  totalDistance.addInPlace(this.mesh.forward.clone().scale(0.42)); // Add the third vector
+            totalDistance.addInPlace(this.climbingSurfaceNormal.clone().scale(0.42)); // Add the third vector
             this.finalClimbPosition=this.initialClimbPosition.add(totalDistance)
- 
+          //for camera purposes FOR CAMERA!! END!!
+
             // Start the climb animation
             climbAnimation.start(false, 1.5, climbAnimation.from, climbAnimation.to, false);
         } else {
@@ -472,9 +485,10 @@ this.mesh.rotate(BABYLON.Axis.Y, angle, BABYLON.Space.WORLD);
             climbAnimation.onAnimationEndObservable.addOnce(() => {
    
                 // Calculate the direction of displacement (upwards and forward)
-                const forwardDirection = this.mesh.forward.clone().scale(0.6); // Adjust the forward displacement
-                const upwardDirection = new BABYLON.Vector3(0, 2.4, 0); // Adjust the upward displacement
-    //this.mesh.position.addInPlace(this.mesh.forward.clone().scale(0.6));
+
+                const forwardDirection = this.climbingSurfaceNormal.clone().scale(0.75); // Adjust the forward displacement
+                const upwardDirection = new BABYLON.Vector3(0,  this.highOffset, 0); // Adjust the upward displacement
+
                 // Calculate the total displacement vector
                 const displacement = forwardDirection.add(upwardDirection);
                 // Apply the displacement to the character's position
@@ -503,6 +517,7 @@ this.mesh.rotate(BABYLON.Axis.Y, angle, BABYLON.Space.WORLD);
     }
 
     playCrouchUpAnimation(activate = true) {
+      //  this.inputManager.keys = {}
         this.previousAnimation = 'crouchUp';
         activate ? this.animations["crouchtostand"].start(false, 1.5, this.animations["crouchtostand"].from, this.animations["crouchtostand"].to, false) : this.animations["crouchtostand"].stop();
         // Check if the event listener is already added
@@ -510,35 +525,41 @@ this.mesh.rotate(BABYLON.Axis.Y, angle, BABYLON.Space.WORLD);
             this.animations["crouchtostand"].onAnimationEndObservable.addOnce(() => {
 
                 this.characterState['isCrouchingUp'] = false;   
-                this.characterState['isIddle'] = true;
+                //this.characterState['isIddle'] = true;
+console.log(this.inputManager.keys)
+           //     this.inputManager.keys = {}
+                //this.inputManager.isKeyDown('ArrowDown') = false
+                // this.inputManager.isKeyDown('ArrowLeft') = false
+                // this.inputManager.isKeyDown('ArrowUp') = false
+                // this.inputManager.isKeyDown('ArrowRight') = false
+
+                // this.inputManager.mobileLeft = false
+                // this.inputManager.mobileDown = false
+                // this.inputManager.mobileUp = false
+                // this.inputManager.mobileRight = false
 
                 const afterRenderFunction = () => {
-                    const forwardDirection = this.mesh.forward.clone().scale(0.42);
+
+
+                //    this.inputManager.keys = {}
+                    // this.inputManager.mobileLeft = false
+                    // this.inputManager.mobileDown = false
+                    // this.inputManager.mobileUp = false
+                    // this.inputManager.mobileRight = false
+
+                    
+                  //  const forwardDirection = this.mesh.forward.clone().scale(0.42);
+                    const forwardDirection = this.climbingSurfaceNormal.clone().scale(0.40);
                     this.mesh.position.addInPlace(forwardDirection);
                     // Unregister the after render function to avoid continuous execution
                     this.charIsClimbing = false
                     this.climbTransition = false
+                   
+                    this.characterState['isIddle'] = true;
                     this.scene.unregisterAfterRender(afterRenderFunction);
                 };
                 // Register the after render function
                 this.scene.registerAfterRender(afterRenderFunction);
-
-            //this work when i update by frames
-            // // Function to add displacement after the animation has ended
-            // const afterAnimationEnd = () => {
-            //     const forwardDirection = this.mesh.forward.clone().scale(0.42);
-            //     this.mesh.position.addInPlace(forwardDirection);
-            //     // Unregister the after render function to avoid continuous execution
-            //     this.charIsClimbing = false;
-            //     this.climbTransition = false;
-            // };
-
-            // // Schedule the displacement after the animation has ended and the next frame
-            // const handle = requestAnimationFrame(() => {
-            //     afterAnimationEnd();
-            //     console.log("CALLED ONCE!!!")
-            //     cancelAnimationFrame(handle); // Cancel the animation frame request after execution
-            // });
 
             });
         }
@@ -621,6 +642,36 @@ this.mesh.rotate(BABYLON.Axis.Y, angle, BABYLON.Space.WORLD);
         this.previousAnimation = 'standingPunching1'
         this.characterState['isPunching'] = false
     };
+
+
+    alignCharacterToSurfaceNormal() {
+        // Calculate rotation to align with surface normal
+        const forward = new BABYLON.Vector3(0, 0, 1); // Default forward
+        const normal = this.climbingSurfaceNormal.clone();
+        
+        // If climbing a vertical surface
+        if (Math.abs(normal.y) < 0.9) {
+            // Calculate right vector (perpendicular to normal and world up)
+            const right = BABYLON.Vector3.Cross(BABYLON.Vector3.Up(), normal).normalize();
+            // Calculate new forward (perpendicular to normal and right)
+            const newForward = BABYLON.Vector3.Cross(normal, right).normalize();
+            
+            // Create rotation matrix
+            const rotationMatrix = BABYLON.Matrix.LookAtLH(
+                BABYLON.Vector3.Zero(),
+                newForward,
+                normal
+            );
+            
+            // Extract rotation quaternion
+            const rotationQuaternion = BABYLON.Quaternion.FromRotationMatrix(rotationMatrix);
+            this.mesh.rotationQuaternion = rotationQuaternion;
+        } else {
+            // For horizontal surfaces, just face forward
+            this.mesh.rotationQuaternion = BABYLON.Quaternion.Identity();
+        }
+    }
+
 
     async load(characterName, scale, position, ellipsoid, ellipsoidOffset) {
         try {

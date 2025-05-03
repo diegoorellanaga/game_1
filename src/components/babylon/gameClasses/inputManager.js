@@ -89,7 +89,7 @@ export default class InputManager {
 
 
 
-        if(this.ui.isMobile || true){
+        if(this.ui.isMobile ){
             this.ui.createJoystick(canvasRef)
         this.ui.jumpBtn.onPointerDownObservable.add(() => {
          //   this.character._isJumping = true;

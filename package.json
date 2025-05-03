@@ -1,7 +1,6 @@
 {
   "name": "babylon-react-chile",
   "version": "0.1.0",
-  "homepage": "https://diegoorellanaga.github.io/game_1/",
   "private": true,
   "dependencies": {
     "@babylonjs/core": "^7.5.0",

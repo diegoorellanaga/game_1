@@ -524,8 +524,8 @@ this.cigGuyInterval = setInterval(() => {
         actionContainer.thickness = 0;
         this.playerUI.addControl(actionContainer);
 
-
-        if(this.isMobile || true){
+//BUTTON A AND B JUMP BUTTON MOBILE PUNCH BUTTON
+        if(this.isMobile){
         //grid for action button placement
         const actionGrid = new GUI.Grid();
         actionGrid.addColumnDefinition(.5);
