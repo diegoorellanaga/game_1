@@ -54,8 +54,8 @@ export default class CharacterController {
 
         this.ORIGINAL_TILT = new BABYLON.Vector3(0.3, 0, 0);
 
-        this.cameraOffsetRadious = 12; //12
-        this.cameraHighOffset = 10 //10
+        this.cameraOffsetRadious = 10; //12
+        this.cameraHighOffset = 8 //10
         this.cameraXoffset = 1 //1
         this.cameraZoffset = 1 //1
         this.init();
@@ -882,12 +882,30 @@ this.camera.attachControl(canvas, true);
             this.character.characterState['isFalling'] = false
             this.character.characterState['isLanding'] = false
 
-            // this.character.initialCharacterPositionClimbing = this.character.mesh.position.clone()
-            // console.log("BEFORE CLIMB: ",this.character.mesh.position.clone())
-            // this.character.climbingEdgePoint = edgePoint
-            // this.character.mesh.position.addInPlace(surfaceNormal.clone().scale(0.2));
-            // this.currentMovingPlatform = pick2.pickedMesh
-            // this.character.climbingSurfaceNormal = surfaceNormal.clone()
+        // SIMPLE ROTATION ALIGNMENT - JUST DO THIS:
+
+        // Correct normal if it's facing the wrong way (angle > 90°)
+        if ( angleInDegrees<30) {
+            surfaceNormal.scaleInPlace(-1); // Flip the normal
+          //  angleInDegrees = 180 - angleInDegrees; // Update angle
+        }
+
+        if (pick2.pickedMesh.id.includes("platform") && Math.abs(angleInDegrees-90)<30) {
+            // Create a rotation matrix for 90 degrees left around Y axis
+            const rotationMatrix = BABYLON.Matrix.RotationY(-Math.PI/2);
+            
+            // Transform the normal using the rotation matrix
+            const rotatedNormal = BABYLON.Vector3.TransformNormal(surfaceNormal, rotationMatrix);
+            surfaceNormal.copyFrom(rotatedNormal);
+            
+            // Alternative simpler method (same result):
+            // surfaceNormal = new BABYLON.Vector3(-surfaceNormal.z, surfaceNormal.y, surfaceNormal.x);
+        }
+            
+        this.character.mesh.lookAt(
+            this.character.mesh.position.add(surfaceNormal)
+        );
+
 
         // Store the critical edge reference points (with height adjustment)
         this.character.climbingEdgePoint = edgePoint.add(surfaceNormal.scale(-0.5));
@@ -898,11 +916,6 @@ this.camera.attachControl(canvas, true);
         const characterPosition = this.character.climbingEdgePoint.clone();
         characterPosition.y -= this.character.highOffset_2; // Adjust for character height
         this.character.mesh.position.copyFrom(characterPosition);
-
-        // SIMPLE ROTATION ALIGNMENT - JUST DO THIS:
-        this.character.mesh.lookAt(
-            this.character.mesh.position.add(surfaceNormal)
-        );
 
         isHang=true
         this.character.characterState['isClimbing'] = true

@@ -16,6 +16,8 @@ export default class Character {
         this.highOffset = 2.355
         this.highOffset_2 = 2.4
 
+        this.savedKeys = {}
+
         this.climbingSurfaceNormal = null;
         this.climbingEdgePoint = null;
 
@@ -491,8 +493,18 @@ this.mesh.rotate(BABYLON.Axis.Y, angle, BABYLON.Space.WORLD);
 
                 // Calculate the total displacement vector
                 const displacement = forwardDirection.add(upwardDirection);
+
+
+                const rightVector = BABYLON.Vector3.Cross(
+                    this.climbingSurfaceNormal.clone(), 
+                    BABYLON.Vector3.Up()
+                ).normalize();
+                
+                // 2. Apply offset in this direction (example: 0.15 units to the right) to glue the 2 animations toghether
+                const sidewaysOffset = rightVector.scale(0.15);
+                const displacement_final = displacement.add(sidewaysOffset);
                 // Apply the displacement to the character's position
-                this.mesh.position.addInPlace(displacement);
+                this.mesh.position.addInPlace(displacement_final);
     
                 // Update character state or perform any other actions
                 this.characterState['isClimbing'] = false;
@@ -517,7 +529,9 @@ this.mesh.rotate(BABYLON.Axis.Y, angle, BABYLON.Space.WORLD);
     }
 
     playCrouchUpAnimation(activate = true) {
-      //  this.inputManager.keys = {}
+
+        this.savedKeys = JSON.stringify(this.inputManager.keys)
+        this.inputManager.keys = {}
         this.previousAnimation = 'crouchUp';
         activate ? this.animations["crouchtostand"].start(false, 1.5, this.animations["crouchtostand"].from, this.animations["crouchtostand"].to, false) : this.animations["crouchtostand"].stop();
         // Check if the event listener is already added
@@ -549,11 +563,15 @@ console.log(this.inputManager.keys)
 
                     
                   //  const forwardDirection = this.mesh.forward.clone().scale(0.42);
-                    const forwardDirection = this.climbingSurfaceNormal.clone().scale(0.40);
+                    const forwardDirection = this.climbingSurfaceNormal.clone().scale(0.408);
                     this.mesh.position.addInPlace(forwardDirection);
                     // Unregister the after render function to avoid continuous execution
                     this.charIsClimbing = false
                     this.climbTransition = false
+
+                    setTimeout(()=>{
+                        this.inputManager.keys = JSON.parse(this.savedKeys)
+                    },100)
                    
                     this.characterState['isIddle'] = true;
                     this.scene.unregisterAfterRender(afterRenderFunction);

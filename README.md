@@ -1,5 +1,5 @@
 # Getting Started with Create React App
-
+ // "homepage": "https://diegoorellanaga.github.io/game_1",
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

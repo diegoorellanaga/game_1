@@ -78,7 +78,7 @@ const GameEntryPoint = props => {
         camera.attachControl(canvasRef.current, true);
         gameScene.current.enablePhysics(new BABYLON.Vector3(0, -9.81, 0), new BABYLON.CannonJSPlugin(true, 10, CANNON));
         // Load the base world
-        worldManager.current = new WorldManager(canvasRef.current, gameEngine.current, gameScene.current, worldMeshesURL.current, serverLocation.current);
+        worldManager.current = new WorldManager(canvasRef.current, gameEngine.current, gameScene.current, worldMeshesURL.current, serverLocation.current, isMobile);
         await worldManager.current.loadWorld(pickedWorld.current);
         // this.worldManager.render();
         character.current = new Character(gameScene.current, worldManager.current.assetsManager, serverLocation.current, frameRate / 20.0,inputManager.current);

@@ -6,17 +6,27 @@ import "@babylonjs/core/Materials/standardMaterial";
 import "@babylonjs/core/Materials/Textures/Loaders/envTextureLoader";
 
 export default class CustomWorld1 {
-    constructor(gameCanvas,gameEngine,gameScene,worldMeshURL,serverLocation) {
+    constructor(gameCanvas,gameEngine,gameScene,worldMeshURL,serverLocation,isMobile=false) {
         this.canvas = gameCanvas;
         this.engine = gameEngine;
         this.scene = gameScene;
         this.animations={};
         this.worldMeshURL = worldMeshURL
         this.serverLocation=serverLocation
+        this.isMobile = isMobile
     }
 
     async loadEnvironment() {
         try {
+
+            if (this.isMobile) {
+                this.engine.setHardwareScalingLevel(1.2); // Reduce resolution
+                this.scene.autoClear = true; // Enable auto-clear
+                this.scene.forceShowBoundingBoxes = false;
+                this.scene.skipFrustumClipping = false;
+            }
+
+
             this.lightSetup();
             await this.loadEnvironmentSolids();
          ///   this.initilizeCoins()
@@ -76,24 +86,7 @@ export default class CustomWorld1 {
     }
 
     async loadSkyBox() {
-        // var skybox = BABYLON.MeshBuilder.CreateBox("skyBox", { size: 2000.0 }, this.scene);
-        // var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", this.scene);
-        // skyboxMaterial.backFaceCulling = false;
 
-        // var files = [
-        //     "https://static.wixstatic.com/media/0e7f19_fdd96566db2c4c058cf9f46659ffe267~mv2.jpg",
-        //     "https://static.wixstatic.com/media/0e7f19_12e55e3001a14aefb321c2ab55a953d0~mv2.jpg",
-        //     "https://static.wixstatic.com/media/0e7f19_cd8317d1098a41549f58cc050459f935~mv2.jpg",
-        //     "https://static.wixstatic.com/media/0e7f19_ddb68d7ef7304d27ac01ebb78a3c50f5~mv2.jpg",
-        //     "https://static.wixstatic.com/media/0e7f19_1c677b36a9d74e3a860e8b79f99163d4~mv2.jpg",
-        //     "https://static.wixstatic.com/media/0e7f19_fc339db038284b9db9e9cff29d9d7e38~mv2.jpg",
-        // ];
-
-        // skyboxMaterial.reflectionTexture = BABYLON.CubeTexture.CreateFromImages(files, this.scene);
-        // skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
-        // skyboxMaterial.disableLighting = true;
-       // alert("loco")
-        // skybox.material = skyboxMaterial;
         var dome = new BABYLON.PhotoDome(
             "testdome",
             this.serverLocation+"/assets/"+"/images/techno2.jpg",
@@ -123,7 +116,10 @@ export default class CustomWorld1 {
             try{
             this.animations[animation.name] = animation;
             this.animations[animation.name].stop()
-            this.animations[animation.name].start(true, 0.7, this.animations[animation.name].from, this.animations[animation.name].to, false)
+            console.log(animation.name)
+            if(!animation.name.includes("conrotation")){
+                 this.animations[animation.name].start(true, 0.7, this.animations[animation.name].from, this.animations[animation.name].to, false)
+            }
             }catch(e){
                 console.log(e)
             }
